@@ -32,6 +32,7 @@
 #include "print.h"
 #include "wait.h"
 #include "quantum.h"
+#include "backlight.h"
 
 
 uint8_t g_pwm_buffer[LED_DRIVER_LED_COUNT];
@@ -69,7 +70,7 @@ void led_matrix_direct_flush(void) {
 
         for (uint8_t col = 0; col < LED_MATRIX_COLS; col++) {
             writePinHigh(led_col_pins[col]);
-            wait_us(30);
+            wait_us(10);
             writePinLow(led_col_pins[col]);
         }
     }
