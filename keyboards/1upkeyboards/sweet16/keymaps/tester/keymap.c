@@ -25,7 +25,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-#ifdef ENCODER_ENABLED
+#ifdef ENCODER_ENABLE
 #include "encoder.h"
 void encoder_update_user(int8_t index, bool clockwise) {
   if (index == 0) { /* First encoder */
