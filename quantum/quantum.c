@@ -982,7 +982,6 @@ void matrix_scan_quantum() {
 
 #if defined(BACKLIGHT_ENABLE)
 #    if defined(LED_MATRIX_ENABLE)
-    // FIXME
     led_matrix_task();
 #    elif defined(BACKLIGHT_PIN)
     backlight_task();
