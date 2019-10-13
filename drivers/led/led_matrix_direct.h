@@ -19,9 +19,12 @@
 #ifndef LED_MATRIX_DIRECT_DRIVER_H
 #define LED_MATRIX_DIRECT_DRIVER_H
 
-void led_matrix_direct_init(uint8_t addr);
+void led_matrix_direct_init_pins(void);
 void led_matrix_direct_set_value(int index, uint8_t value);
 void led_matrix_direct_set_value_all(uint8_t value);
 void led_matrix_direct_flush(void);
+void led_matrix_direct_select_row(uint8_t row);
+void led_matrix_direct_unselect_row(uint8_t row);
+void led_matrix_direct_unselect_rows(void);
 
 #endif  // LED_MATRIX_DIRECT_DRIVER_H

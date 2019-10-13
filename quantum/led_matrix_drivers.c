@@ -42,6 +42,7 @@
 #endif
 
 static void init(void) {
+#if 0  // FIXME remove this
 #if defined(IS31FL3731) || defined(IS31FL3733)
     i2c_init();
 
@@ -115,9 +116,11 @@ static void init(void) {
 #ifdef LED_MATRIX_DIRECT
     led_matrix_direct_init();
 #endif
+#endif  // FIXME remove this
 }
 
 static void flush(void) {
+#if 0  // FIXME remove this
 #ifdef IS31FL3731
 #    ifdef LED_DRIVER_ADDR_1
     IS31FL3731_update_pwm_buffers(LED_DRIVER_ADDR_1, 0);
@@ -150,6 +153,7 @@ static void flush(void) {
 #ifdef LED_MATRIX_DIRECT
     led_matrix_direct_flush();
 #endif
+#endif  // FIXME remove this
 }
 
 const led_matrix_driver_t led_matrix_driver = {
@@ -168,3 +172,4 @@ const led_matrix_driver_t led_matrix_driver = {
     .set_value_all = led_matrix_direct_set_value_all,
 #endif
 };
+

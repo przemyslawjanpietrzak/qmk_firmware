@@ -26,6 +26,7 @@ backlight_config_t backlight_config;
  * FIXME: needs doc
  */
 void backlight_init(void) {
+#if 0 // FIXME remove this
     /* check signature */
     if (!eeconfig_is_enabled()) {
         eeconfig_init();
@@ -35,6 +36,7 @@ void backlight_init(void) {
         backlight_config.level = BACKLIGHT_LEVELS;
     }
     backlight_set(backlight_config.enable ? backlight_config.level : 0);
+#endif
 }
 
 /** \brief Backlight increase
@@ -42,6 +44,7 @@ void backlight_init(void) {
  * FIXME: needs doc
  */
 void backlight_increase(void) {
+#if 0 // FIXME remove this
     if (backlight_config.level < BACKLIGHT_LEVELS) {
         backlight_config.level++;
     }
@@ -49,6 +52,7 @@ void backlight_increase(void) {
     eeconfig_update_backlight(backlight_config.raw);
     dprintf("backlight increase: %u\n", backlight_config.level);
     backlight_set(backlight_config.level);
+#endif
 }
 
 /** \brief Backlight decrease
@@ -56,6 +60,7 @@ void backlight_increase(void) {
  * FIXME: needs doc
  */
 void backlight_decrease(void) {
+#if 0 // FIXME remove this
     if (backlight_config.level > 0) {
         backlight_config.level--;
         backlight_config.enable = !!backlight_config.level;
@@ -63,6 +68,7 @@ void backlight_decrease(void) {
     }
     dprintf("backlight decrease: %u\n", backlight_config.level);
     backlight_set(backlight_config.level);
+#endif
 }
 
 /** \brief Backlight toggle
@@ -70,12 +76,14 @@ void backlight_decrease(void) {
  * FIXME: needs doc
  */
 void backlight_toggle(void) {
+#if 0 // FIXME remove this
     bool enabled = backlight_config.enable;
     dprintf("backlight toggle: %u\n", enabled);
     if (enabled)
         backlight_disable();
     else
         backlight_enable();
+#endif
 }
 
 /** \brief Enable backlight
@@ -83,6 +91,7 @@ void backlight_toggle(void) {
  * FIXME: needs doc
  */
 void backlight_enable(void) {
+#if 0 // FIXME remove this
     if (backlight_config.enable) return;  // do nothing if backlight is already on
 
     backlight_config.enable = true;
@@ -91,6 +100,7 @@ void backlight_enable(void) {
     eeconfig_update_backlight(backlight_config.raw);
     dprintf("backlight enable\n");
     backlight_set(backlight_config.level);
+#endif
 }
 
 /** \brief Disable backlight
@@ -98,25 +108,29 @@ void backlight_enable(void) {
  * FIXME: needs doc
  */
 void backlight_disable(void) {
+#if 0 // FIXME remove this
     if (!backlight_config.enable) return;  // do nothing if backlight is already off
 
     backlight_config.enable = false;
     eeconfig_update_backlight(backlight_config.raw);
     dprintf("backlight disable\n");
     backlight_set(0);
+#endif
 }
 
 /** /brief Get the backlight status
  *
  * FIXME: needs doc
  */
-bool is_backlight_enabled(void) { return backlight_config.enable; }
+//bool is_backlight_enabled(void) { return backlight_config.enable; }
+bool is_backlight_enabled(void) { return 0; }
 
 /** \brief Backlight step through levels
  *
  * FIXME: needs doc
  */
 void backlight_step(void) {
+#if 0 // FIXME remove this
     backlight_config.level++;
     if (backlight_config.level > BACKLIGHT_LEVELS) {
         backlight_config.level = 0;
@@ -125,6 +139,7 @@ void backlight_step(void) {
     eeconfig_update_backlight(backlight_config.raw);
     dprintf("backlight step: %u\n", backlight_config.level);
     backlight_set(backlight_config.level);
+#endif
 }
 
 /** \brief Backlight set level
@@ -132,18 +147,21 @@ void backlight_step(void) {
  * FIXME: needs doc
  */
 void backlight_level(uint8_t level) {
+#if 0 // FIXME remove this
     if (level > BACKLIGHT_LEVELS) level = BACKLIGHT_LEVELS;
     backlight_config.level  = level;
     backlight_config.enable = !!backlight_config.level;
     eeconfig_update_backlight(backlight_config.raw);
     backlight_set(backlight_config.level);
+#endif
 }
 
 /** \brief Get backlight level
  *
  * FIXME: needs doc
  */
-uint8_t get_backlight_level(void) { return backlight_config.level; }
+//uint8_t get_backlight_level(void) { return backlight_config.level; }
+uint8_t get_backlight_level(void) { return 0; }
 
 #ifdef BACKLIGHT_BREATHING
 /** \brief Backlight breathing toggle
@@ -151,12 +169,14 @@ uint8_t get_backlight_level(void) { return backlight_config.level; }
  * FIXME: needs doc
  */
 void backlight_toggle_breathing(void) {
+#if 0 // FIXME remove this
     bool breathing = backlight_config.breathing;
     dprintf("backlight breathing toggle: %u\n", breathing);
     if (breathing)
         backlight_disable_breathing();
     else
         backlight_enable_breathing();
+#endif
 }
 
 /** \brief Enable backlight breathing
@@ -164,12 +184,14 @@ void backlight_toggle_breathing(void) {
  * FIXME: needs doc
  */
 void backlight_enable_breathing(void) {
+#if 0 // FIXME remove this
     if (backlight_config.breathing) return;  // do nothing if breathing is already on
 
     backlight_config.breathing = true;
     eeconfig_update_backlight(backlight_config.raw);
     dprintf("backlight breathing enable\n");
     breathing_enable();
+#endif
 }
 
 /** \brief Disable backlight breathing
@@ -177,17 +199,20 @@ void backlight_enable_breathing(void) {
  * FIXME: needs doc
  */
 void backlight_disable_breathing(void) {
+#if 0 // FIXME remove this
     if (!backlight_config.breathing) return;  // do nothing if breathing is already off
 
     backlight_config.breathing = false;
     eeconfig_update_backlight(backlight_config.raw);
     dprintf("backlight breathing disable\n");
     breathing_disable();
+#endif
 }
 
 /** \brief Get the backlight breathing status
  *
  * FIXME: needs doc
  */
-bool is_backlight_breathing(void) { return backlight_config.breathing; }
+//bool is_backlight_breathing(void) { return backlight_config.breathing; }
+bool is_backlight_breathing(void) { return 0; }
 #endif
