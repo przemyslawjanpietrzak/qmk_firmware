@@ -35,69 +35,56 @@
 
 
 uint8_t g_pwm_buffer[LED_DRIVER_LED_COUNT];
-//const pin_t led_row_pins[LED_MATRIX_ROWS] = LED_MATRIX_ROW_PINS;
-//const pin_t led_col_pins[LED_MATRIX_COLS] = LED_MATRIX_COL_PINS;
+const pin_t led_row_pins[LED_MATRIX_ROWS] = LED_MATRIX_ROW_PINS;
+const pin_t led_col_pins[LED_MATRIX_COLS] = LED_MATRIX_COL_PINS;
 
 
 void led_matrix_direct_init_pins(void) {
-    /*
     print("Initializing LED matrix.\n");
-    led_matrix_direct_unselect_rows();
+    for (uint8_t x = 0; x < LED_MATRIX_ROWS; x++) {
+        setPinOutput(led_row_pins[x]);
+    }
 
     for (uint8_t x = 0; x < LED_MATRIX_COLS; x++) {
-        setPinInputLow(led_col_pins[x]);
+        setPinOutput(led_col_pins[x]);
     }
-    */
 }
 
 void led_matrix_direct_set_value(int index, uint8_t value) {
-    /*
     if (index >= 0 && index < LED_DRIVER_LED_COUNT) {
         g_pwm_buffer[index] = value;
     }
-    */
 }
 
 void led_matrix_direct_set_value_all(uint8_t value) {
-    /*
     for (int i = 0; i < LED_DRIVER_LED_COUNT; i++) {
         led_matrix_direct_set_value(i, value);
     }
-    */
 }
 
 void led_matrix_direct_flush(void) {
     // FIXME: Need to take led brightness into account
-    /*
     for (uint8_t row = 0; row < LED_MATRIX_ROWS; row++) {
         led_matrix_direct_select_row(row);
 
         for (uint8_t col = 0; col < LED_MATRIX_COLS; col++) {
-            setPinInputHigh(led_col_pins[col]);
+            writePinHigh(led_col_pins[col]);
             wait_us(30);
-            setPinInputLow(led_col_pins[col]);
+            writePinLow(led_col_pins[col]);
         }
     }
-    */
 }
 
 void led_matrix_direct_select_row(uint8_t row) {
-    /*
-    setPinOutput(led_row_pins[row]);
     writePinLow(led_row_pins[row]);
-    */
 }
 
 void led_matrix_direct_unselect_row(uint8_t row) {
-    /*
-    setPinInputHigh(led_row_pins[row]);
-    */
+    writePinHigh(led_row_pins[row]);
 }
 
 void led_matrix_direct_unselect_rows(void) {
-    /*
     for (uint8_t x = 0; x < LED_MATRIX_ROWS; x++) {
-        setPinInputHigh(led_row_pins[x]);
+        writePinHigh(led_row_pins[x]);
     }
-    */
 }
