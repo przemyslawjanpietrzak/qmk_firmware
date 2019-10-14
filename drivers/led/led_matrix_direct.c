@@ -28,15 +28,15 @@
 #include <stdbool.h>
 #include <string.h>
 #include "led_matrix_direct.h"
+#include "led_tables.h"
 #include "progmem.h"
-#include "print.h"
 #include "wait.h"
 #include "quantum.h"
 #include "backlight.h"
 
 
 /*
- * g_pwm_buffer is an array that represents the value of each LED.
+ * g_pwm_buffer is an array that represents the duty cycle (0-255) for each LED.
  * FIXME: Map this from the wiring matrix to a physical location matrix at some point
  */
 uint8_t g_pwm_buffer[LED_MATRIX_ROWS * LED_MATRIX_COLS];
@@ -77,6 +77,7 @@ void led_matrix_direct_flush(void) {
      */
     uint8_t led_count = 0;
     for (uint8_t row = 0; row < LED_MATRIX_ROWS; row++) {
+        uint8_t brightness = pgm_read_byte(&CIE1931_CURVE[g_pwm_buffer[led_count]]);
         writePinLow(led_row_pins[row]);
 
         for (uint8_t col = 0; col < LED_MATRIX_COLS; col++) {
@@ -85,7 +86,7 @@ void led_matrix_direct_flush(void) {
             if (g_pwm_buffer[led_count] > 0) {
                 writePinHigh(led_col_pins[col]);
                 for (uint8_t i = 0; i < 255; i++) {
-                    if (g_pwm_buffer[led_count] == i) {
+                    if (brightness == i) {
                         writePinLow(led_col_pins[col]);
 		    }
                     wait_us(1);

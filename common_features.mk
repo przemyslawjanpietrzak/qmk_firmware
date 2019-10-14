@@ -130,6 +130,7 @@ ifneq ($(strip $(LED_MATRIX_ENABLE)), no)
 endif
 
 ifeq ($(strip $(LED_MATRIX_ENABLE)), direct)
+    CIE1931_CURVE = yes
     OPT_DEFS += -DLED_MATRIX_DIRECT_ENABLE
     COMMON_VPATH += $(DRIVER_PATH)/led
     SRC += led_matrix_direct.c
