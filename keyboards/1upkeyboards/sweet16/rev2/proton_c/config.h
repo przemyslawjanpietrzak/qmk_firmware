@@ -8,11 +8,11 @@
 
 /* key matrix pins */
 #define MATRIX_ROW_PINS { B5, B7, B2, B0 }
-#define MATRIX_COL_PINS { B8, A0, A9, A10 }
+#define MATRIX_COL_PINS { B8, A0, A10, A9 }
 #define UNUSED_PINS
 
 /* COL2ROW or ROW2COL */
-#define DIODE_DIRECTION COL2ROW
+#define DIODE_DIRECTION ROW2COL
 
 /* Backlight configuration
  */
@@ -23,6 +23,6 @@
 #define LED_DRIVER_LED_COUNT 16
 
 /* Encoder pins */
-#define ENCODERS_PAD_A { F4 }
-#define ENCODERS_PAD_B { F5 }
+#define ENCODERS_PAD_A { A2 }
+#define ENCODERS_PAD_B { A1 }
 #define ENCODER_RESOLUTION 4
