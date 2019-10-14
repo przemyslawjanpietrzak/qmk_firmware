@@ -74,34 +74,24 @@ void led_matrix_direct_set_value_all(uint8_t value) {
 
 void led_matrix_direct_flush(void) {
     /* This is a basic bit-banged pwm implementation.
-     *
-     * Limitations:
-     * - Only 10 brightness levels
-     * - Brighter leds will introduce latency to keyboard scanning
      */
     uint8_t led_count = 0;
     for (uint8_t row = 0; row < LED_MATRIX_ROWS; row++) {
         writePinLow(led_row_pins[row]);
 
         for (uint8_t col = 0; col < LED_MATRIX_COLS; col++) {
-            /* We spend ~10us on each LED, dividing that time between lit and unlit.
+            /* We spend ~2.5ms on each LED, dividing that time between lit and unlit.
              */
-            const int brightness = g_pwm_buffer[led_count] / 25;
-	    if (brightness >= 10) {
+            if (g_pwm_buffer[led_count] > 0) {
                 writePinHigh(led_col_pins[col]);
-                wait_us(10);
-                writePinLow(led_col_pins[col]);
-            } else if (brightness > 0) {
-                for (uint8_t i = 10; i >= brightness; i--) {
-                    wait_us(1);  // LED is off
+                for (uint8_t i = 0; i < 255; i++) {
+                    if (g_pwm_buffer[led_count] == i) {
+                        writePinLow(led_col_pins[col]);
+		    }
+                    wait_us(1);
                 }
-                writePinHigh(led_col_pins[col]);
-                for (uint8_t i = 1; i <= brightness; i++) {
-                    wait_us(1);  // LED is on
-                }
-                writePinLow(led_col_pins[col]);
             } else {
-                wait_us(10);
+                wait_us(255);
 	    }
             led_count++;
         }
