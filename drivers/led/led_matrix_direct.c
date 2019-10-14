@@ -84,15 +84,25 @@ void led_matrix_direct_flush(void) {
         writePinLow(led_row_pins[row]);
 
         for (uint8_t col = 0; col < LED_MATRIX_COLS; col++) {
-            wait_us(1);  // This seems to give more even brightness
+            /* We spend ~10us on each LED, dividing that time between lit and unlit.
+             */
             const int brightness = g_pwm_buffer[led_count] / 25;
-            if (brightness > 0) {
+	    if (brightness >= 10) {
+                writePinHigh(led_col_pins[col]);
+                wait_us(10);
+                writePinLow(led_col_pins[col]);
+            } else if (brightness > 0) {
+                for (uint8_t i = 10; i >= brightness; i--) {
+                    wait_us(1);  // LED is off
+                }
                 writePinHigh(led_col_pins[col]);
                 for (uint8_t i = 1; i <= brightness; i++) {
-                    wait_us(1);
+                    wait_us(1);  // LED is on
                 }
-            }
-            writePinLow(led_col_pins[col]);
+                writePinLow(led_col_pins[col]);
+            } else {
+                wait_us(10);
+	    }
             led_count++;
         }
     }
