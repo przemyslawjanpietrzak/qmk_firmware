@@ -35,13 +35,18 @@
 #include "backlight.h"
 
 
-uint8_t g_pwm_buffer[LED_DRIVER_LED_COUNT];
+/*
+ * g_pwm_buffer is an array that represents the value of each LED.
+ * FIXME: Map this from the wiring matrix to a physical location matrix at some point
+ */
+uint8_t g_pwm_buffer[LED_MATRIX_ROWS * LED_MATRIX_COLS];
 const pin_t led_row_pins[LED_MATRIX_ROWS] = LED_MATRIX_ROW_PINS;
 const pin_t led_col_pins[LED_MATRIX_COLS] = LED_MATRIX_COL_PINS;
 
 
 void led_matrix_direct_init_pins(void) {
-    print("Initializing LED matrix.\n");
+    /* Set all pins to output, we are not interested in reading any information.
+     */
     for (uint8_t x = 0; x < LED_MATRIX_ROWS; x++) {
         setPinOutput(led_row_pins[x]);
     }
@@ -52,40 +57,43 @@ void led_matrix_direct_init_pins(void) {
 }
 
 void led_matrix_direct_set_value(int index, uint8_t value) {
+    /* Set the brighness for a single LED.
+     */
     if (index >= 0 && index < LED_DRIVER_LED_COUNT) {
         g_pwm_buffer[index] = value;
     }
 }
 
 void led_matrix_direct_set_value_all(uint8_t value) {
+    /* Set the brighness for all LEDs.
+     */
     for (int i = 0; i < LED_DRIVER_LED_COUNT; i++) {
         led_matrix_direct_set_value(i, value);
     }
 }
 
 void led_matrix_direct_flush(void) {
-    // FIXME: Need to take led brightness into account
+    /* This is a basic bit-banged pwm implementation.
+     *
+     * Limitations:
+     * - Only 10 brightness levels
+     * - Brighter leds will introduce latency to keyboard scanning
+     */
+    uint8_t led_count = 0;
     for (uint8_t row = 0; row < LED_MATRIX_ROWS; row++) {
-        led_matrix_direct_select_row(row);
+        writePinLow(led_row_pins[row]);
 
         for (uint8_t col = 0; col < LED_MATRIX_COLS; col++) {
-            writePinHigh(led_col_pins[col]);
-            wait_us(10);
+            wait_us(1);  // This seems to give more even brightness
+            const int brightness = g_pwm_buffer[led_count] / 25;
+            if (brightness > 0) {
+                writePinHigh(led_col_pins[col]);
+                for (uint8_t i = 1; i <= brightness; i++) {
+                    wait_us(1);
+                }
+            }
             writePinLow(led_col_pins[col]);
+            led_count++;
         }
-    }
-}
-
-void led_matrix_direct_select_row(uint8_t row) {
-    writePinLow(led_row_pins[row]);
-}
-
-void led_matrix_direct_unselect_row(uint8_t row) {
-    writePinHigh(led_row_pins[row]);
-}
-
-void led_matrix_direct_unselect_rows(void) {
-    for (uint8_t x = 0; x < LED_MATRIX_ROWS; x++) {
-        writePinHigh(led_row_pins[x]);
     }
 }
