@@ -6,6 +6,28 @@ If you want to use RGB LED's you should use the [RGB Matrix Subsystem](feature_r
 
 ## Driver configuration
 
+### Direct
+
+This driver supports driving an LED matrix that is connected directly to the local controller in a common-row cathode orientation. For more general information on LED matrices and how to design them there are several useful outside resources:
+
+* https://www.circuitspecialists.com/blog/build-8x8-led-matrix/
+* https://www.instructables.com/id/Make-Your-Own-LED-Matrix-/
+* https://appelsiini.net/2011/how-does-led-matrix-work/
+
+To start you need to enable LED Matrix in your `rules.mk`:
+
+    LED_MATRIX_ENABLE = direct
+
+After this you can configure your LED Matrix:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `LED_DRIVER_LED_COUNT` | (Required) How many LED lights are present | (none) |
+| `LED_MATRIX_COLS` | (Required) The number of columns (current sources) your matrix has | (none) |
+| `LED_MATRIX_COL_PINS` | (Required) A list of column pins, EG `{ B1, B2, B3, B4 }`| (none) |
+| `LED_MATRIX_ROWS` | (Required) The number of rows (current sinks) your matrix has | (none) |
+| `LED_MATRIX_ROW_PINS` | (Required) A list of row pins, EG `{ B5, B6, B7, B8 }` | (none) |
+
 ### IS31FL3731
 
 There is basic support for addressable LED matrix lighting with the I2C IS31FL3731 RGB controller. To enable it, add this to your `rules.mk`:
