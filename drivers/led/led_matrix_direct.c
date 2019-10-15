@@ -49,10 +49,12 @@ void led_matrix_direct_init_pins(void) {
      */
     for (uint8_t x = 0; x < LED_MATRIX_ROWS; x++) {
         setPinOutput(led_row_pins[x]);
+        writePinLow(led_row_pins[x]);
     }
 
     for (uint8_t x = 0; x < LED_MATRIX_COLS; x++) {
         setPinOutput(led_col_pins[x]);
+        writePinLow(led_col_pins[x]);
     }
 }
 
@@ -77,7 +79,7 @@ void led_matrix_direct_flush(void) {
      */
     uint8_t led_count = 0;
     for (uint8_t row = 0; row < LED_MATRIX_ROWS; row++) {
-        uint8_t brightness = pgm_read_byte(&CIE1931_CURVE[g_pwm_buffer[led_count]]);
+        uint8_t brightness = pgm_read_byte(&CIE1931_CURVE[g_pwm_buffer[led_count]]) / 2;
         writePinLow(led_row_pins[row]);
 
         for (uint8_t col = 0; col < LED_MATRIX_COLS; col++) {
@@ -85,15 +87,15 @@ void led_matrix_direct_flush(void) {
              */
             if (g_pwm_buffer[led_count] > 0) {
                 writePinHigh(led_col_pins[col]);
-                for (uint8_t i = 0; i < 255; i++) {
+                for (uint8_t i = 0; i < 128; i++) {
                     if (brightness == i) {
                         writePinLow(led_col_pins[col]);
-		    }
+                    }
                     wait_us(1);
                 }
             } else {
                 wait_us(255);
-	    }
+            }
             led_count++;
         }
     }
