@@ -32,12 +32,6 @@
 #include "sendchar.h"
 #include "debug.h"
 #include "printf.h"
-#ifdef LED_MATRIX_ENABLE
-#    include "ledmatrix.h"
-#endif
-#ifdef RGB_MATRIX_ENABLE
-#    include "rgb_matrix.h"
-#endif
 #ifdef SLEEP_LED_ENABLE
 #    include "sleep_led.h"
 #endif
@@ -83,28 +77,25 @@ void raw_hid_task(void);
 void console_task(void);
 #endif
 
-#if defined(BACKLIGHT_ENABLE) || defined(RGB_MATRIX_ENABLE)
-/* LED/RGB Matrix task thread
+/* TESTING
+ * Amber LED blinker thread, times are in milliseconds.
  */
-static THD_WORKING_AREA(waThread1, 128);
-static THD_FUNCTION(Thread1, arg) {
-    (void)arg;
-    chRegSetThreadName("led_matrix");
-    while (true) {
-#    if defined(BACKLIGHT_ENABLE)
-#        if defined(LED_MATRIX_ENABLE)
-        led_matrix_task();
-#        elif defined(BACKLIGHT_PIN)
-        backlight_task();
-#        endif
-#    endif
+/* set this variable to non-zero anywhere to blink once */
+// static THD_WORKING_AREA(waThread1, 128);
+// static THD_FUNCTION(Thread1, arg) {
 
-#    ifdef RGB_MATRIX_ENABLE
-        rgb_matrix_task();
-#    endif
-  }
-}
-#endif
+//   (void)arg;
+//   chRegSetThreadName("blinker");
+//   while (true) {
+//     systime_t time;
+
+//     time = USB_DRIVER.state == USB_ACTIVE ? 250 : 500;
+//     palClearLine(LINE_CAPS_LOCK);
+//     chSysPolledDelayX(MS2RTC(STM32_HCLK, time));
+//     palSetLine(LINE_CAPS_LOCK);
+//     chSysPolledDelayX(MS2RTC(STM32_HCLK, time));
+//   }
+// }
 
 /* Main thread
  */
@@ -116,6 +107,9 @@ int main(void) {
 #ifdef STM32_EEPROM_ENABLE
     EEPROM_Init();
 #endif
+
+    // TESTING
+    // chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
 
     keyboard_setup();
 
@@ -178,11 +172,6 @@ int main(void) {
 #endif
 
     print("Keyboard start.\n");
-
-#if defined(BACKLIGHT_ENABLE) || defined(RGB_MATRIX_ENABLE)
-    // LED/RGB Matrix task thread
-    chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO+1, Thread1, NULL);
-#endif
 
     /* Main loop */
     while (true) {

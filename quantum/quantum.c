@@ -978,19 +978,16 @@ void matrix_scan_quantum() {
     matrix_scan_combo();
 #endif
 
-    // On ChibiOS we have a thread to run these tasks.
-#ifndef PROTOCOL_CHIBIOS
-#    if defined(BACKLIGHT_ENABLE)
-#        if defined(LED_MATRIX_ENABLE)
+#if defined(BACKLIGHT_ENABLE)
+#    if defined(LED_MATRIX_ENABLE)
     led_matrix_task();
-#        elif defined(BACKLIGHT_PIN)
+#    elif defined(BACKLIGHT_PIN)
     backlight_task();
-#        endif
 #    endif
+#endif
 
-#    ifdef RGB_MATRIX_ENABLE
+#ifdef RGB_MATRIX_ENABLE
     rgb_matrix_task();
-#    endif
 #endif
 
 #ifdef ENCODER_ENABLE
