@@ -20,8 +20,11 @@
 #    include <avr/interrupt.h>
 #    include <avr/io.h>
 #    include <util/delay.h>
+#    define led_wait_us(us) wait_us(us)
 #else
-#    include "wait.h"
+#    include "ch.h"
+#    include "hal.h"
+#    define led_wait_us(us) chSysPolledDelayX(US2RTC(STM32_SYSCLK, us))
 #endif
 
 #include <stdint.h>
@@ -30,7 +33,6 @@
 #include "led_matrix_pinmatrix.h"
 #include "led_tables.h"
 #include "progmem.h"
-#include "wait.h"
 #include "quantum.h"
 #include "backlight.h"
 
@@ -90,10 +92,10 @@ void led_matrix_pinmatrix_flush(void) {
                     if (i == brightness) {
                         writePinLow(led_col_pins[col]);
 		    }
-                    wait_us(1);
+                    led_wait_us(1);
 		}
             } else {
-                wait_us(128);
+                led_wait_us(128);
             }
             led_count++;
         }
