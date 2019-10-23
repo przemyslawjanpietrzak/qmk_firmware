@@ -16,15 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LED_MATRIX_DIRECT_DRIVER_H
-#define LED_MATRIX_DIRECT_DRIVER_H
+#ifndef LED_MATRIX_PINS_DRIVER_H
+#define LED_MATRIX_PINS_DRIVER_H
 
-void led_matrix_direct_init_pins(void);
-void led_matrix_direct_set_value(int index, uint8_t value);
-void led_matrix_direct_set_value_all(uint8_t value);
-void led_matrix_direct_flush(void);
-void led_matrix_direct_select_row(uint8_t row);
-void led_matrix_direct_unselect_row(uint8_t row);
-void led_matrix_direct_unselect_rows(void);
+void led_matrix_pins_init_pins(void);
+void led_matrix_pins_set_value(int index, uint8_t value);
+void led_matrix_pins_set_value_all(uint8_t value);
+void led_matrix_pins_flush(void);
+void led_matrix_pins_select_row(uint8_t row);
+void led_matrix_pins_unselect_row(uint8_t row);
+void led_matrix_pins_unselect_rows(void);
 
-#endif  // LED_MATRIX_DIRECT_DRIVER_H
+#endif  // LED_MATRIX_PINS_DRIVER_H

@@ -27,7 +27,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
-#include "led_matrix_direct.h"
+#include "led_matrix_pinmatrix.h"
 #include "led_tables.h"
 #include "progmem.h"
 #include "wait.h"
@@ -44,19 +44,21 @@ const pin_t led_row_pins[LED_MATRIX_ROWS] = LED_MATRIX_ROW_PINS;
 const pin_t led_col_pins[LED_MATRIX_COLS] = LED_MATRIX_COL_PINS;
 
 
-void led_matrix_direct_init_pins(void) {
+void led_matrix_pinmatrix_init_pins(void) {
     /* Set all pins to output, we are not interested in reading any information.
      */
     for (uint8_t x = 0; x < LED_MATRIX_ROWS; x++) {
         setPinOutput(led_row_pins[x]);
+	writePinLow(led_row_pins[x]);
     }
 
     for (uint8_t x = 0; x < LED_MATRIX_COLS; x++) {
         setPinOutput(led_col_pins[x]);
+	writePinLow(led_col_pins[x]);
     }
 }
 
-void led_matrix_direct_set_value(int index, uint8_t value) {
+void led_matrix_pinmatrix_set_value(int index, uint8_t value) {
     /* Set the brighness for a single LED.
      */
     if (index >= 0 && index < LED_DRIVER_LED_COUNT) {
@@ -64,36 +66,35 @@ void led_matrix_direct_set_value(int index, uint8_t value) {
     }
 }
 
-void led_matrix_direct_set_value_all(uint8_t value) {
+void led_matrix_pinmatrix_set_value_all(uint8_t value) {
     /* Set the brighness for all LEDs.
      */
     for (int i = 0; i < LED_DRIVER_LED_COUNT; i++) {
-        led_matrix_direct_set_value(i, value);
+        led_matrix_pinmatrix_set_value(i, value);
     }
 }
 
-void led_matrix_direct_flush(void) {
+void led_matrix_pinmatrix_flush(void) {
     /* This is a basic bit-banged pwm implementation.
      */
     uint8_t led_count = 0;
     for (uint8_t row = 0; row < LED_MATRIX_ROWS; row++) {
-        uint8_t brightness = pgm_read_byte(&CIE1931_CURVE[g_pwm_buffer[led_count]]);
         writePinLow(led_row_pins[row]);
-
         for (uint8_t col = 0; col < LED_MATRIX_COLS; col++) {
-            /* We spend ~2.5ms on each LED, dividing that time between lit and unlit.
+            /* We spend ~128us on each LED, dividing that time between lit and unlit.
              */
-            if (g_pwm_buffer[led_count] > 0) {
+            const uint8_t brightness = pgm_read_byte(&CIE1931_CURVE[g_pwm_buffer[led_count]]) / 2;
+            if (brightness > 0) {
                 writePinHigh(led_col_pins[col]);
-                for (uint8_t i = 0; i < 255; i++) {
-                    if (brightness == i) {
+		for (int i = 0; i < 128; i++) {
+                    if (i == brightness) {
                         writePinLow(led_col_pins[col]);
 		    }
                     wait_us(1);
-                }
+		}
             } else {
-                wait_us(255);
-	    }
+                wait_us(128);
+            }
             led_count++;
         }
     }
