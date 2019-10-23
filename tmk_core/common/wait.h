@@ -21,7 +21,14 @@ extern "C" {
                 chThdSleepMicroseconds(1);  \
             }                               \
         } while (0)
-void wait_us(uint64_t us);
+#    define wait_us(us)                     \
+        do {                                \
+            if (us != 0) {                  \
+                chThdSleepMicroseconds(us); \
+            } else {                        \
+                chThdSleepMicroseconds(1);  \
+            }                               \
+        } while (0)
 #elif defined PROTOCOL_ARM_ATSAM
 #    include "clks.h"
 #    define wait_ms(ms) CLK_delay_ms(ms)
